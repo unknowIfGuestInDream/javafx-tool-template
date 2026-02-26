@@ -6,10 +6,6 @@
 
 - **Language:** Java 21
 - **Build tool:** Maven 3.9+
-- **UI framework:** JavaFX 21 with ControlsFX 11 and AtlantaFX 2
-- **Logging:** SLF4J 2 + Logback 1.5
-- **Testing:** JUnit Jupiter 5.11
-- **Artifact:** `javafx-tool-template.jar` + `lib/` folder (classpath-based, via `maven-dependency-plugin`)
 
 ## Commit Message Convention
 
