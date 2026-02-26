@@ -9,7 +9,7 @@
 - **UI framework:** JavaFX 21 with ControlsFX 11 and AtlantaFX 2
 - **Logging:** SLF4J 2 + Logback 1.5
 - **Testing:** JUnit Jupiter 5.11
-- **Artifact:** Fat/shaded JAR via `maven-shade-plugin`
+- **Artifact:** `javafx-tool-template.jar` + `lib/` folder (classpath-based, via `maven-dependency-plugin`)
 
 ## Commit Message Convention
 
@@ -50,17 +50,28 @@ mvn test
 ```
 
 - `mvn clean verify` is the canonical CI command. Always run it before submitting changes.
-- The fat JAR entry point is `com.tlcsdm.fxtemplate.Launcher` (wraps `TemplateApplication` for shaded-JAR compatibility).
-- `mvn javafx:run` launches `com.tlcsdm.fxtemplate.TemplateApplication` directly.
-- There is no linting step beyond Java compilation.
+- Build output is `target/javafx-tool-template.jar` + `target/lib/` (all runtime deps). Both are required to run the JAR.
+- The JAR manifest entry point is `com.tlcsdm.fxtemplate.Launcher`; `mvn javafx:run` launches `TemplateApplication` directly.
+- There is no linting step beyond Java compilation (`-Xlint:-module` suppresses module-related warnings).
 
 ## Project Layout
 
 ```
-.github/workflows/
-  build.yml        # CI: mvn -B clean verify on push/PR to main/master (Ubuntu, Windows, macOS)
-  artifact.yml     # Manual: mvn clean package -DskipTests, uploads JAR artifact
-  release.yml      # On release publish: packages and uploads ZIP assets
+.github/
+  CODEOWNERS                 # Code ownership assignments
+  dependabot.yml             # Weekly Dependabot updates for Maven + GitHub Actions
+  workflows/
+    test.yml       # CI: mvn -B clean verify on push/PR to main/master (Ubuntu, Windows, macOS)
+    package.yml    # Manual: build + stage JAR/lib/scripts/JRE, uploads per-OS artifact
+    release.yml    # On release created: packages per-OS ZIP and uploads to GitHub release
+
+scripts/
+  jre.sh           # Linux: downloads JDK 21, builds custom JRE via jlink
+  jre_mac.sh       # macOS: same as jre.sh for macOS
+  jre.ps1          # Windows: same as jre.sh for Windows (PowerShell)
+  linux/start.sh   # Linux launcher script (bundled in staging)
+  mac/             # macOS launcher scripts (bundled in staging)
+  win/             # Windows launcher scripts: start.bat, console.bat, start.vbs
 
 pom.xml            # Single-module Maven project (groupId=com.tlcsdm, artifactId=javafx-tool-template, v1.0.0)
 
@@ -94,7 +105,7 @@ src/test/java/com/tlcsdm/fxtemplate/
 
 ## CI Checks
 
-The **Build** workflow (`.github/workflows/build.yml`) runs on every push and pull request to `main`/`master`:
+The **Test** workflow (`.github/workflows/test.yml`) runs on every push and pull request to `main`/`master`:
 
 1. Checks out the code
 2. Sets up Temurin JDK 21
@@ -109,7 +120,8 @@ mvn -B clean verify --no-transfer-progress
 
 ## Key Facts
 
-- The `Launcher` class must remain the JAR manifest entry point; do **not** set `TemplateApplication` as the manifest main class in the shade plugin or fat-JAR will fail at startup.
+- The `Launcher` class must remain the JAR manifest entry point; do **not** change the manifest `mainClass` or the classpath-based launch will fail.
+- The packaging produces `target/javafx-tool-template.jar` + `target/lib/`; both must be kept together to run the application.
 - When adding i18n keys, add them to **all three** properties files (`messages.properties`, `messages_zh.properties`, `messages_ja.properties`).
 - Tests do **not** start the JavaFX runtime; keep unit tests headless. UI changes must be tested manually.
 - `AppSettings` uses PreferencesFX and persists data to the OS preferences store; it is a singleton accessed via `AppSettings.getInstance()`.
