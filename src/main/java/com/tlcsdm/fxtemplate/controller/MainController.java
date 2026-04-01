@@ -2,8 +2,11 @@ package com.tlcsdm.fxtemplate.controller;
 
 import com.tlcsdm.fxtemplate.config.AppSettings;
 import com.tlcsdm.fxtemplate.config.I18N;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +21,22 @@ public class MainController {
     @FXML
     private Label statusLabel;
 
+    @FXML
+    private Label windowTitleLabel;
+
+    @FXML
+    private Button maximizeButton;
+
     private Stage primaryStage;
+    private double dragOffsetX;
+    private double dragOffsetY;
 
     @FXML
     public void initialize() {
         statusLabel.setText(I18N.get("status.ready"));
+        if (windowTitleLabel != null) {
+            windowTitleLabel.setText(I18N.get("app.title"));
+        }
     }
 
     /**
@@ -30,6 +44,8 @@ public class MainController {
      */
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
+        this.primaryStage.maximizedProperty().addListener((obs, oldVal, newVal) -> updateMaximizeButtonText());
+        updateMaximizeButtonText();
     }
 
     /**
@@ -46,9 +62,49 @@ public class MainController {
     @FXML
     public void exitApplication() {
         shutdown();
-        if (primaryStage != null) {
-            primaryStage.close();
+        closePrimaryStage();
+    }
+
+    @FXML
+    public void onTitleBarMousePressed(MouseEvent event) {
+        if (primaryStage == null) {
+            return;
         }
+        dragOffsetX = event.getScreenX() - primaryStage.getX();
+        dragOffsetY = event.getScreenY() - primaryStage.getY();
+    }
+
+    @FXML
+    public void onTitleBarMouseDragged(MouseEvent event) {
+        if (primaryStage == null || primaryStage.isMaximized()) {
+            return;
+        }
+        primaryStage.setX(event.getScreenX() - dragOffsetX);
+        primaryStage.setY(event.getScreenY() - dragOffsetY);
+    }
+
+    @FXML
+    public void onTitleBarMouseClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            toggleMaximizeWindow();
+        }
+    }
+
+    @FXML
+    public void onMinimizeWindow(ActionEvent event) {
+        if (primaryStage != null) {
+            primaryStage.setIconified(true);
+        }
+    }
+
+    @FXML
+    public void onToggleMaximizeWindow(ActionEvent event) {
+        toggleMaximizeWindow();
+    }
+
+    @FXML
+    public void onCloseWindow(ActionEvent event) {
+        closePrimaryStage();
     }
 
     /**
@@ -69,5 +125,25 @@ public class MainController {
      */
     public void shutdown() {
         LOG.info("Application shutting down");
+    }
+
+    private void closePrimaryStage() {
+        if (primaryStage != null) {
+            primaryStage.close();
+        }
+    }
+
+    private void toggleMaximizeWindow() {
+        if (primaryStage == null) {
+            return;
+        }
+        primaryStage.setMaximized(!primaryStage.isMaximized());
+        updateMaximizeButtonText();
+    }
+
+    private void updateMaximizeButtonText() {
+        if (maximizeButton != null && primaryStage != null) {
+            maximizeButton.setText(primaryStage.isMaximized() ? "❐" : "□");
+        }
     }
 }

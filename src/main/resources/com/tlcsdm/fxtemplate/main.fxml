@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -8,6 +9,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
@@ -16,16 +18,45 @@
             prefWidth="900" prefHeight="700">
 
     <top>
-        <MenuBar>
-            <Menu text="%menu.file">
-                <MenuItem text="%menu.settings" onAction="#openSettings"/>
-                <SeparatorMenuItem/>
-                <MenuItem text="%menu.exit" onAction="#exitApplication"/>
-            </Menu>
-            <Menu text="%menu.help">
-                <MenuItem text="%menu.about" onAction="#showAbout"/>
-            </Menu>
-        </MenuBar>
+        <VBox>
+            <HBox style="-fx-background-color: -color-bg-subtle;">
+                <HBox fx:id="titleDragArea"
+                      alignment="CENTER_LEFT" spacing="8"
+                      HBox.hgrow="ALWAYS"
+                      onMousePressed="#onTitleBarMousePressed"
+                      onMouseDragged="#onTitleBarMouseDragged"
+                      onMouseClicked="#onTitleBarMouseClicked">
+                    <padding>
+                        <Insets top="6" right="10" bottom="6" left="10"/>
+                    </padding>
+                    <Label text="◉" style="-fx-text-fill: -color-accent-emphasis;"/>
+                    <Label fx:id="windowTitleLabel" text="%app.title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Button text="—" onAction="#onMinimizeWindow"
+                        style="-fx-background-radius: 0; -fx-background-color: transparent; -fx-padding: 6 12 6 12;"
+                        accessibleText="%window.minimize"
+                        focusTraversable="false"/>
+                <Button fx:id="maximizeButton" text="□" onAction="#onToggleMaximizeWindow"
+                        style="-fx-background-radius: 0; -fx-background-color: transparent; -fx-padding: 6 12 6 12;"
+                        accessibleText="%window.maximize"
+                        focusTraversable="false"/>
+                <Button text="✕" onAction="#onCloseWindow"
+                        style="-fx-background-radius: 0; -fx-background-color: transparent; -fx-padding: 6 12 6 12;"
+                        accessibleText="%window.close"
+                        focusTraversable="false"/>
+            </HBox>
+            <MenuBar>
+                <Menu text="%menu.file">
+                    <MenuItem text="%menu.settings" onAction="#openSettings"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="%menu.exit" onAction="#exitApplication"/>
+                </Menu>
+                <Menu text="%menu.help">
+                    <MenuItem text="%menu.about" onAction="#showAbout"/>
+                </Menu>
+            </MenuBar>
+        </VBox>
     </top>
 
     <center>
