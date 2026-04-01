@@ -2,7 +2,6 @@ package com.tlcsdm.fxtemplate.controller;
 
 import com.tlcsdm.fxtemplate.config.AppSettings;
 import com.tlcsdm.fxtemplate.config.I18N;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,9 +33,6 @@ public class MainController {
     @FXML
     public void initialize() {
         statusLabel.setText(I18N.get("status.ready"));
-        if (windowTitleLabel != null) {
-            windowTitleLabel.setText(I18N.get("app.title"));
-        }
     }
 
     /**
@@ -91,19 +87,19 @@ public class MainController {
     }
 
     @FXML
-    public void onMinimizeWindow(ActionEvent event) {
+    public void onMinimizeWindow() {
         if (primaryStage != null) {
             primaryStage.setIconified(true);
         }
     }
 
     @FXML
-    public void onToggleMaximizeWindow(ActionEvent event) {
+    public void onToggleMaximizeWindow() {
         toggleMaximizeWindow();
     }
 
     @FXML
-    public void onCloseWindow(ActionEvent event) {
+    public void onCloseWindow() {
         closePrimaryStage();
     }
 
