@@ -37,33 +37,14 @@ jobs:
         shell: bash
         run: mvn -B clean package --no-transfer-progress -DskipTests
 
-      - name: Resolve version & stage files (Windows)
+      - name: Prepare dist directory
+        shell: bash
+        run: mkdir -p dist
+
+      - name: Package with script (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
-        run: |
-          $versionOutput = & mvn -q -DforceStdout 'help:evaluate' -Dexpression='project.version' 2>$null
-          $version = $versionOutput.Trim()
-          if (-not $version) { throw 'Failed to extract version from Maven' }
-          Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$version" -Encoding utf8
-
-          if (-not (Test-Path dist)) { New-Item -ItemType Directory -Path dist | Out-Null }
-
-          $stagingDir = 'staging'
-          if (-not (Test-Path $stagingDir)) { New-Item -ItemType Directory -Path $stagingDir | Out-Null }
-
-          Copy-Item -Path 'target\javafx-tool-template.jar' -Destination $stagingDir
-          Copy-Item -Path 'target\lib' -Destination $stagingDir -Recurse
-          Copy-Item -Path 'README.md' -Destination $stagingDir
-          Copy-Item -Path 'LICENSE' -Destination $stagingDir
-          Copy-Item -Path 'scripts\win\*' -Destination $stagingDir -Recurse
-
-      - name: Download JRE (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          Push-Location staging
-          & ..\scripts\jre.ps1
-          Pop-Location
+        run: ./scripts/package.ps1
 
       - name: Package artifact (Windows)
         if: runner.os == 'Windows'
@@ -73,28 +54,10 @@ jobs:
           Write-Host "Created dist/javafx-tool-template-windows-$env:APP_VERSION.zip"
           Remove-Item -Path 'staging' -Recurse -Force
 
-      - name: Resolve version & stage files (Linux)
+      - name: Package with script (Linux)
         if: runner.os == 'Linux'
         shell: bash
-        run: |
-          version=$(mvn -q -DforceStdout 'help:evaluate' -Dexpression=project.version 2>/dev/null)
-          version=$(echo "$version" | tr -d '\r')
-          if [ -z "$version" ]; then echo "Failed to extract version from Maven" >&2; exit 1; fi
-          echo "APP_VERSION=$version" >> $GITHUB_ENV
-
-          mkdir -p dist staging
-          cp target/javafx-tool-template.jar staging/
-          cp -r target/lib staging/
-          cp README.md LICENSE staging/
-          cp scripts/linux/* staging/
-
-      - name: Download JRE (Linux)
-        if: runner.os == 'Linux'
-        shell: bash
-        run: |
-          cd staging
-          bash ../scripts/jre.sh
-          cd ..
+        run: bash ./scripts/package.sh linux
 
       - name: Package artifact (Linux)
         if: runner.os == 'Linux'
@@ -106,28 +69,10 @@ jobs:
           echo "Created dist/javafx-tool-template-linux-${APP_VERSION}.zip"
           rm -rf staging
 
-      - name: Resolve version & stage files (macOS)
+      - name: Package with script (macOS)
         if: runner.os == 'macOS'
         shell: bash
-        run: |
-          version=$(mvn -q -DforceStdout 'help:evaluate' -Dexpression=project.version 2>/dev/null)
-          version=$(echo "$version" | tr -d '\r')
-          if [ -z "$version" ]; then echo "Failed to extract version from Maven" >&2; exit 1; fi
-          echo "APP_VERSION=$version" >> $GITHUB_ENV
-
-          mkdir -p dist staging
-          cp target/javafx-tool-template.jar staging/
-          cp -r target/lib staging/
-          cp README.md LICENSE staging/
-          cp scripts/mac/* staging/
-
-      - name: Download JRE (macOS)
-        if: runner.os == 'macOS'
-        shell: bash
-        run: |
-          cd staging
-          bash ../scripts/jre_mac.sh
-          cd ..
+        run: bash ./scripts/package.sh mac
 
       - name: Package artifact (macOS)
         if: runner.os == 'macOS'

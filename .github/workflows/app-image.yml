@@ -1,4 +1,4 @@
-name: Package
+name: App Image
 
 on:
   workflow_dispatch:
@@ -7,12 +7,9 @@ permissions:
   contents: read
 
 jobs:
-  package:
-    name: Package on ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-    runs-on: ${{ matrix.os }}
+  app-image:
+    name: App image on Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
@@ -36,24 +33,13 @@ jobs:
         shell: bash
         run: mvn -B clean package --no-transfer-progress -DskipTests
 
-      - name: Package with script (Windows)
-        if: runner.os == 'Windows'
+      - name: Package app image
         shell: pwsh
-        run: ./scripts/package.ps1
+        run: ./scripts/app-image.ps1
 
-      - name: Package with script (Linux)
-        if: runner.os == 'Linux'
-        shell: bash
-        run: bash ./scripts/package.sh linux
-
-      - name: Package with script (macOS)
-        if: runner.os == 'macOS'
-        shell: bash
-        run: bash ./scripts/package.sh mac
-
-      - name: Upload packaged artifact
+      - name: Upload app image artifact
         uses: actions/upload-artifact@v7
         with:
-          name: javafx-tool-template-${{ matrix.os }}
-          path: staging/
+          name: javafx-tool-template-app-image-windows
+          path: dist/javafx-tool-template-app-image-windows-${{ env.APP_VERSION }}.zip
           retention-days: 7
