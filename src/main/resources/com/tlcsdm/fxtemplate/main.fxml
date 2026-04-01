@@ -34,14 +34,20 @@
                     <Region HBox.hgrow="ALWAYS"/>
                 </HBox>
                 <Button text="—" onAction="#onMinimizeWindow"
+                        onMouseEntered="#onWindowButtonMouseEntered"
+                        onMouseExited="#onWindowButtonMouseExited"
                         style="-fx-background-radius: 0; -fx-background-color: transparent; -fx-padding: 6 12 6 12;"
                         accessibleText="%window.minimize"
                         focusTraversable="false"/>
                 <Button fx:id="maximizeButton" text="□" onAction="#onToggleMaximizeWindow"
+                        onMouseEntered="#onWindowButtonMouseEntered"
+                        onMouseExited="#onWindowButtonMouseExited"
                         style="-fx-background-radius: 0; -fx-background-color: transparent; -fx-padding: 6 12 6 12;"
                         accessibleText="%window.maximize"
                         focusTraversable="false"/>
-                <Button text="✕" onAction="#onCloseWindow"
+                <Button fx:id="closeButton" text="✕" onAction="#onCloseWindow"
+                        onMouseEntered="#onWindowButtonMouseEntered"
+                        onMouseExited="#onWindowButtonMouseExited"
                         style="-fx-background-radius: 0; -fx-background-color: transparent; -fx-padding: 6 12 6 12;"
                         accessibleText="%window.close"
                         focusTraversable="false"/>

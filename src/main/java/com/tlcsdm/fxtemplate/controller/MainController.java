@@ -26,9 +26,16 @@ public class MainController {
     @FXML
     private Button maximizeButton;
 
+    @FXML
+    private Button closeButton;
+
     private Stage primaryStage;
     private double dragOffsetX;
     private double dragOffsetY;
+
+    private static final String TITLE_BUTTON_HOVER_STYLE = "-fx-background-color: -color-bg-default;";
+    private static final String TITLE_BUTTON_CLOSE_HOVER_STYLE =
+        "-fx-background-color: -color-danger-emphasis; -fx-text-fill: -color-fg-emphasis;";
 
     @FXML
     public void initialize() {
@@ -101,6 +108,23 @@ public class MainController {
     @FXML
     public void onCloseWindow() {
         closePrimaryStage();
+    }
+
+    @FXML
+    public void onWindowButtonMouseEntered(MouseEvent event) {
+        if (event.getSource() instanceof Button button) {
+            String baseStyle = button.getStyle();
+            button.getProperties().put("baseStyle", baseStyle);
+            button.setStyle(baseStyle + (button == closeButton ? TITLE_BUTTON_CLOSE_HOVER_STYLE : TITLE_BUTTON_HOVER_STYLE));
+        }
+    }
+
+    @FXML
+    public void onWindowButtonMouseExited(MouseEvent event) {
+        if (event.getSource() instanceof Button button) {
+            Object baseStyle = button.getProperties().get("baseStyle");
+            button.setStyle(baseStyle instanceof String style ? style : "");
+        }
     }
 
     /**
