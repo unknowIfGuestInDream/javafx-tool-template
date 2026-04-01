@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,8 @@ public class TemplateApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
         loader.setResources(I18N.getBundle());
         Parent root = loader.load();

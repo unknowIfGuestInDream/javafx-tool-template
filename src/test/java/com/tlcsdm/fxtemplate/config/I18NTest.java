@@ -51,4 +51,11 @@ class I18NTest {
         assertNotNull(name, "Display name should not be null");
         assertFalse(name.isEmpty(), "Display name should not be empty");
     }
+
+    @Test
+    void testGetWindowControlI18nKeys() {
+        assertFalse(I18N.get("window.minimize").isEmpty(), "window.minimize should not be empty");
+        assertFalse(I18N.get("window.maximize").isEmpty(), "window.maximize should not be empty");
+        assertFalse(I18N.get("window.close").isEmpty(), "window.close should not be empty");
+    }
 }
