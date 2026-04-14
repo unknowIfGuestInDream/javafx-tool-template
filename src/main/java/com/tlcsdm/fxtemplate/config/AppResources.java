@@ -1,10 +1,12 @@
 package com.tlcsdm.fxtemplate.config;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.InputStream;
 import java.util.Objects;
@@ -61,11 +63,16 @@ public final class AppResources {
             applyWindowIcon(stage);
             return;
         }
-        scene.windowProperty().addListener((obs, oldWindow, newWindow) -> {
-            if (newWindow instanceof Stage stage) {
-                applyWindowIcon(stage);
+        ChangeListener<Window> listener = new ChangeListener<>() {
+            @Override
+            public void changed(javafx.beans.value.ObservableValue<? extends Window> obs, Window oldWindow, Window newWindow) {
+                if (newWindow instanceof Stage stage) {
+                    applyWindowIcon(stage);
+                    scene.windowProperty().removeListener(this);
+                }
             }
-        });
+        };
+        scene.windowProperty().addListener(listener);
     }
 
     private static Image loadImage(String path) {

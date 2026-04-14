@@ -16,10 +16,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.management.ManagementFactory;
-import java.util.Objects;
 
 /**
  * Main controller for the template application.
@@ -236,12 +236,16 @@ public class MainController {
     }
 
     private Path resolveLaunchPath() throws IOException {
+        CodeSource codeSource = Launcher.class.getProtectionDomain().getCodeSource();
+        if (codeSource == null) {
+            throw new IOException("Unable to determine application launch path: code source is unavailable");
+        }
         try {
-            return Path.of(Objects.requireNonNull(
-                Launcher.class.getProtectionDomain().getCodeSource(),
-                "Unable to determine application launch path: code source is unavailable").getLocation().toURI());
-        } catch (URISyntaxException | NullPointerException | SecurityException e) {
-            throw new IOException("Failed to resolve launch path", e);
+            return Path.of(codeSource.getLocation().toURI());
+        } catch (URISyntaxException e) {
+            throw new IOException("Failed to resolve launch path from code source URI", e);
+        } catch (SecurityException e) {
+            throw new IOException("Access denied while resolving application launch path", e);
         }
     }
 }
