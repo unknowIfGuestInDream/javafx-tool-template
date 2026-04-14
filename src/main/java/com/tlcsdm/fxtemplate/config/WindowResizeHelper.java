@@ -86,16 +86,12 @@ public final class WindowResizeHelper {
         }
         if (direction.isLeft()) {
             double newWidth = Math.max(minWidth, startWidth - dx);
-            if (newWidth > minWidth) {
-                stage.setX(startStageX + dx);
-            }
+            stage.setX(startStageX + startWidth - newWidth);
             stage.setWidth(newWidth);
         }
         if (direction.isTop()) {
             double newHeight = Math.max(minHeight, startHeight - dy);
-            if (newHeight > minHeight) {
-                stage.setY(startStageY + dy);
-            }
+            stage.setY(startStageY + startHeight - newHeight);
             stage.setHeight(newHeight);
         }
 
