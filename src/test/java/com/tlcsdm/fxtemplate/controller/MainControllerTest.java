@@ -28,14 +28,15 @@ class MainControllerTest {
 
     @Test
     void testBuildRestartCommandUsesJarLaunchPath() {
+        Path launchPath = Path.of("/tmp/javafx-tool-template.jar");
         List<String> command = MainController.buildRestartCommand(
             "/opt/jdk",
-            Path.of("/tmp/javafx-tool-template.jar"),
+            launchPath,
             "/tmp/classes:/tmp/lib/*",
             List.of("-Xmx256m"));
 
         assertTrue(command.contains("-jar"), "Restart command should relaunch from the packaged jar");
-        assertTrue(command.contains("/tmp/javafx-tool-template.jar"), "Restart command should include the jar path");
+        assertTrue(command.contains(launchPath.toString()), "Restart command should include the jar path");
         assertFalse(command.contains("-cp"), "Jar restart should not use the classpath launcher mode");
     }
 
