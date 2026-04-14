@@ -36,7 +36,7 @@ public final class AppResources {
     }
 
     public static void applyWindowIcon(Stage stage) {
-        if (stage != null && stage.getIcons().stream().noneMatch(icon -> icon == LOGO)) {
+        if (stage != null && !stage.getIcons().contains(LOGO)) {
             stage.getIcons().add(LOGO);
         }
     }

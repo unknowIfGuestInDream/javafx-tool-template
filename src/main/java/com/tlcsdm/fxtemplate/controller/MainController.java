@@ -13,11 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.management.ManagementFactory;
+import java.util.Objects;
 
 /**
  * Main controller for the template application.
@@ -83,11 +85,12 @@ public class MainController {
     @FXML
     public void restartApplication() {
         try {
-            new ProcessBuilder(buildRestartCommand(
+            List<String> restartCommand = buildRestartCommand(
                 System.getProperty("java.home"),
                 resolveLaunchPath(),
                 System.getProperty("java.class.path"),
-                ManagementFactory.getRuntimeMXBean().getInputArguments())).start();
+                ManagementFactory.getRuntimeMXBean().getInputArguments());
+            new ProcessBuilder(restartCommand).start();
             shutdown();
             closePrimaryStage();
         } catch (IOException e) {
@@ -235,8 +238,10 @@ public class MainController {
 
     private Path resolveLaunchPath() throws IOException {
         try {
-            return Path.of(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        } catch (Exception e) {
+            return Path.of(Objects.requireNonNull(
+                Launcher.class.getProtectionDomain().getCodeSource(),
+                "Missing code source for launcher").getLocation().toURI());
+        } catch (URISyntaxException | NullPointerException | SecurityException e) {
             throw new IOException("Failed to resolve launch path", e);
         }
     }
