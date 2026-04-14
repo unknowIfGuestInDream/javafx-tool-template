@@ -3,6 +3,7 @@ package com.tlcsdm.fxtemplate;
 import com.tlcsdm.fxtemplate.config.AppResources;
 import com.tlcsdm.fxtemplate.config.AppSettings;
 import com.tlcsdm.fxtemplate.config.I18N;
+import com.tlcsdm.fxtemplate.config.WindowResizeHelper;
 import com.tlcsdm.fxtemplate.controller.MainController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -55,6 +56,8 @@ public class TemplateApplication extends Application {
             }
             Platform.exit();
         });
+
+        WindowResizeHelper.addResizeListener(primaryStage);
 
         primaryStage.show();
         LOG.info("Application started");
