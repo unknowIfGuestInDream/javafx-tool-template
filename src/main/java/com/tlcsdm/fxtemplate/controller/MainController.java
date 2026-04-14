@@ -1,5 +1,7 @@
 package com.tlcsdm.fxtemplate.controller;
 
+import com.tlcsdm.fxtemplate.Launcher;
+import com.tlcsdm.fxtemplate.config.AppResources;
 import com.tlcsdm.fxtemplate.config.AppSettings;
 import com.tlcsdm.fxtemplate.config.I18N;
 import javafx.fxml.FXML;
@@ -9,6 +11,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.lang.management.ManagementFactory;
 
 /**
  * Main controller for the template application.
@@ -66,6 +75,25 @@ public class MainController {
     public void exitApplication() {
         shutdown();
         closePrimaryStage();
+    }
+
+    /**
+     * Restart the application.
+     */
+    @FXML
+    public void restartApplication() {
+        try {
+            new ProcessBuilder(buildRestartCommand(
+                System.getProperty("java.home"),
+                resolveLaunchPath(),
+                System.getProperty("java.class.path"),
+                ManagementFactory.getRuntimeMXBean().getInputArguments())).start();
+            shutdown();
+            closePrimaryStage();
+        } catch (IOException e) {
+            LOG.error("Failed to restart application", e);
+            statusLabel.setText(I18N.get("status.restartFailed"));
+        }
     }
 
     @FXML
@@ -137,6 +165,7 @@ public class MainController {
         alert.setTitle(I18N.get("menu.about"));
         alert.setHeaderText(I18N.get("app.title"));
         alert.setContentText(I18N.get("about.description"));
+        AppResources.applyDialogLogo(alert, primaryStage);
         alert.showAndWait();
     }
 
@@ -164,6 +193,51 @@ public class MainController {
     private void updateMaximizeButtonText() {
         if (maximizeButton != null && primaryStage != null) {
             maximizeButton.setText(primaryStage.isMaximized() ? "❐" : "□");
+        }
+    }
+
+    static List<String> buildRestartCommand(String javaHome, Path launchPath, String classPath, List<String> vmArguments) {
+        List<String> command = new ArrayList<>();
+        command.add(getJavaExecutable(javaHome));
+        command.addAll(filterRestartVmArguments(vmArguments));
+        if (launchPath != null && launchPath.toString().endsWith(".jar")) {
+            command.add("-jar");
+            command.add(launchPath.toString());
+        } else {
+            command.add("-cp");
+            command.add(classPath);
+            command.add(Launcher.class.getName());
+        }
+        return command;
+    }
+
+    static List<String> filterRestartVmArguments(List<String> vmArguments) {
+        List<String> filteredArguments = new ArrayList<>();
+        if (vmArguments == null) {
+            return filteredArguments;
+        }
+        for (String argument : vmArguments) {
+            if (argument == null
+                || argument.startsWith("-agentlib")
+                || argument.startsWith("-agentpath")
+                || argument.startsWith("-javaagent")) {
+                continue;
+            }
+            filteredArguments.add(argument);
+        }
+        return filteredArguments;
+    }
+
+    private static String getJavaExecutable(String javaHome) {
+        String executable = System.getProperty("os.name", "").toLowerCase().contains("win") ? "java.exe" : "java";
+        return Paths.get(javaHome, "bin", executable).toString();
+    }
+
+    private Path resolveLaunchPath() throws IOException {
+        try {
+            return Path.of(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        } catch (Exception e) {
+            throw new IOException("Failed to resolve launch path", e);
         }
     }
 }
