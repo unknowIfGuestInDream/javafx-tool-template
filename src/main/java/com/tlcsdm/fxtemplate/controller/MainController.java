@@ -220,8 +220,7 @@ public class MainController {
             return filteredArguments;
         }
         for (String argument : vmArguments) {
-            if (argument == null
-                || argument.startsWith("-agentlib")
+            if (argument.startsWith("-agentlib")
                 || argument.startsWith("-agentpath")
                 || argument.startsWith("-javaagent")) {
                 continue;
@@ -240,7 +239,7 @@ public class MainController {
         try {
             return Path.of(Objects.requireNonNull(
                 Launcher.class.getProtectionDomain().getCodeSource(),
-                "Missing code source for launcher").getLocation().toURI());
+                "Unable to determine application launch path: code source is unavailable").getLocation().toURI());
         } catch (URISyntaxException | NullPointerException | SecurityException e) {
             throw new IOException("Failed to resolve launch path", e);
         }
