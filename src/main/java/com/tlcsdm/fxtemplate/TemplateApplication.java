@@ -1,5 +1,6 @@
 package com.tlcsdm.fxtemplate;
 
+import com.tlcsdm.fxtemplate.config.AppResources;
 import com.tlcsdm.fxtemplate.config.AppSettings;
 import com.tlcsdm.fxtemplate.config.I18N;
 import com.tlcsdm.fxtemplate.controller.MainController;
@@ -43,6 +44,7 @@ public class TemplateApplication extends Application {
         Scene scene = new Scene(root, 900, 700);
 
         primaryStage.setTitle(I18N.get("app.title"));
+        AppResources.applyWindowIcon(primaryStage);
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);

@@ -58,4 +58,10 @@ class I18NTest {
         assertFalse(I18N.get("window.maximize").isEmpty(), "window.maximize should not be empty");
         assertFalse(I18N.get("window.close").isEmpty(), "window.close should not be empty");
     }
+
+    @Test
+    void testGetMenuAndStatusI18nKeys() {
+        assertFalse(I18N.get("menu.restart").isEmpty(), "menu.restart should not be empty");
+        assertFalse(I18N.get("status.restartFailed").isEmpty(), "status.restartFailed should not be empty");
+    }
 }

@@ -7,6 +7,8 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -29,7 +31,11 @@
                     <padding>
                         <Insets top="6" right="10" bottom="6" left="10"/>
                     </padding>
-                    <Label text="◉" style="-fx-text-fill: -color-accent-emphasis;"/>
+                    <ImageView fitWidth="20" fitHeight="20" preserveRatio="true">
+                        <image>
+                            <Image url="@logo.png"/>
+                        </image>
+                    </ImageView>
                     <Label fx:id="windowTitleLabel" text="%app.title"/>
                     <Region HBox.hgrow="ALWAYS"/>
                 </HBox>
@@ -56,6 +62,7 @@
                 <Menu text="%menu.file">
                     <MenuItem text="%menu.settings" onAction="#openSettings"/>
                     <SeparatorMenuItem/>
+                    <MenuItem text="%menu.restart" onAction="#restartApplication"/>
                     <MenuItem text="%menu.exit" onAction="#exitApplication"/>
                 </Menu>
                 <Menu text="%menu.help">
@@ -70,6 +77,11 @@
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
+            <ImageView fitWidth="96" fitHeight="96" preserveRatio="true">
+                <image>
+                    <Image url="@logo.png"/>
+                </image>
+            </ImageView>
             <Label text="%app.title" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
             <Label text="%about.description" wrapText="true" style="-fx-font-size: 14px;"/>
         </VBox>
