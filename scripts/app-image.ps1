@@ -43,8 +43,8 @@ if ($env:GITHUB_ENV) {
 
 $jarPath = 'target\javafx-tool-template.jar'
 if (-not (Test-Path $jarPath)) { throw 'JAR not found at target\javafx-tool-template.jar' }
-$iconPath = 'target\classes\com\tlcsdm\fxtemplate\logo.ico'
-if (-not (Test-Path $iconPath)) { throw 'Icon not found at target\classes\com\tlcsdm\fxtemplate\logo.ico' }
+$iconPath = 'scripts\logo.ico'
+if (-not (Test-Path $iconPath)) { throw 'Icon not found at scripts\logo.ico' }
 
 $jpackageInput = 'jpackage-input'
 if (Test-Path $jpackageInput) { Remove-Item -Path $jpackageInput -Recurse -Force }
