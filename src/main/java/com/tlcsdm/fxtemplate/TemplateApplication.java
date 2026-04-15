@@ -25,6 +25,7 @@ public class TemplateApplication extends Application {
     private static final Logger LOG = LoggerFactory.getLogger(TemplateApplication.class);
 
     private MainController controller;
+    private Stage primaryStage;
 
     @Override
     public void init() {
@@ -34,6 +35,7 @@ public class TemplateApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        this.primaryStage = primaryStage;
         primaryStage.initStyle(StageStyle.UNDECORATED);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
@@ -49,8 +51,10 @@ public class TemplateApplication extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
+        applySavedWindowBounds(primaryStage);
 
         primaryStage.setOnCloseRequest(event -> {
+            persistWindowBounds(primaryStage);
             if (controller != null) {
                 controller.shutdown();
             }
@@ -68,6 +72,26 @@ public class TemplateApplication extends Application {
         if (controller != null) {
             controller.shutdown();
         }
+    }
+
+    private void applySavedWindowBounds(Stage primaryStage) {
+        AppSettings.getInstance().getMainWindowBounds().ifPresent(bounds -> {
+            primaryStage.setWidth(Math.max(bounds.width(), primaryStage.getMinWidth()));
+            primaryStage.setHeight(Math.max(bounds.height(), primaryStage.getMinHeight()));
+            primaryStage.setX(bounds.x());
+            primaryStage.setY(bounds.y());
+        });
+    }
+
+    private void persistWindowBounds(Stage primaryStage) {
+        if (primaryStage == null || primaryStage.isMaximized() || primaryStage.isIconified()) {
+            return;
+        }
+        AppSettings.getInstance().saveMainWindowBounds(
+            primaryStage.getX(),
+            primaryStage.getY(),
+            primaryStage.getWidth(),
+            primaryStage.getHeight());
     }
 
     public static void main(String[] args) {
