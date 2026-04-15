@@ -9,6 +9,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 
+import java.util.Optional;
+import java.util.prefs.Preferences;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +18,12 @@ import java.util.List;
  * Application settings management using PreferencesFX.
  */
 public class AppSettings {
+
+    private static final String WINDOW_X_KEY = "window.x";
+    private static final String WINDOW_Y_KEY = "window.y";
+    private static final String WINDOW_WIDTH_KEY = "window.width";
+    private static final String WINDOW_HEIGHT_KEY = "window.height";
+    private static final Preferences PREFS = Preferences.userNodeForPackage(AppSettings.class);
 
     private static AppSettings instance;
 
@@ -102,7 +110,8 @@ public class AppSettings {
                 .saveSettings(true)
                 .debugHistoryMode(false)
                 .buttonsVisibility(false)
-                .instantPersistent(true);
+                .instantPersistent(true)
+                .dialogIcon(AppResources.getLogo());
 
             if (!savedLocale.equals(languageProperty.get())) {
                 languageProperty.set(savedLocale);
@@ -121,5 +130,43 @@ public class AppSettings {
      */
     public void applyInitialSettings() {
         AppTheme.applySavedTheme();
+    }
+
+    public void saveMainWindowBounds(double x, double y, double width, double height) {
+        if (!Double.isFinite(x) || !Double.isFinite(y)
+            || !Double.isFinite(width) || !Double.isFinite(height)
+            || width <= 0 || height <= 0) {
+            return;
+        }
+        PREFS.putDouble(WINDOW_X_KEY, x);
+        PREFS.putDouble(WINDOW_Y_KEY, y);
+        PREFS.putDouble(WINDOW_WIDTH_KEY, width);
+        PREFS.putDouble(WINDOW_HEIGHT_KEY, height);
+    }
+
+    public Optional<WindowBounds> getMainWindowBounds() {
+        String widthValue = PREFS.get(WINDOW_WIDTH_KEY, null);
+        String heightValue = PREFS.get(WINDOW_HEIGHT_KEY, null);
+        String xValue = PREFS.get(WINDOW_X_KEY, null);
+        String yValue = PREFS.get(WINDOW_Y_KEY, null);
+
+        if (widthValue == null || heightValue == null || xValue == null || yValue == null) {
+            return Optional.empty();
+        }
+
+        double width = PREFS.getDouble(WINDOW_WIDTH_KEY, -1);
+        double height = PREFS.getDouble(WINDOW_HEIGHT_KEY, -1);
+        double x = PREFS.getDouble(WINDOW_X_KEY, Double.NaN);
+        double y = PREFS.getDouble(WINDOW_Y_KEY, Double.NaN);
+
+        if (!Double.isFinite(x) || !Double.isFinite(y)
+            || !Double.isFinite(width) || !Double.isFinite(height)
+            || width <= 0 || height <= 0) {
+            return Optional.empty();
+        }
+        return Optional.of(new WindowBounds(x, y, width, height));
+    }
+
+    public record WindowBounds(double x, double y, double width, double height) {
     }
 }
