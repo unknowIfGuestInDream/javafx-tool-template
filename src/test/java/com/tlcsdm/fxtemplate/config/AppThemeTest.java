@@ -47,4 +47,11 @@ class AppThemeTest {
             assertFalse(str.isEmpty(), "toString() should not return empty for " + theme.name());
         }
     }
+
+    @Test
+    void testNewAtlantaFxThemesExist() {
+        assertEquals("settings.theme.atlantafx.cupertinoLight", AppTheme.ATLANTAFX_CUPERTINO_LIGHT.getDisplayNameKey());
+        assertEquals("settings.theme.atlantafx.cupertinoDark", AppTheme.ATLANTAFX_CUPERTINO_DARK.getDisplayNameKey());
+        assertEquals("settings.theme.atlantafx.dracula", AppTheme.ATLANTAFX_DRACULA.getDisplayNameKey());
+    }
 }
