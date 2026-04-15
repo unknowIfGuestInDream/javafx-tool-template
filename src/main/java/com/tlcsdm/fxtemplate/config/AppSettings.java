@@ -145,17 +145,8 @@ public class AppSettings {
     }
 
     public Optional<WindowBounds> getMainWindowBounds() {
-        String widthValue = PREFS.get(WINDOW_WIDTH_KEY, null);
-        String heightValue = PREFS.get(WINDOW_HEIGHT_KEY, null);
-        String xValue = PREFS.get(WINDOW_X_KEY, null);
-        String yValue = PREFS.get(WINDOW_Y_KEY, null);
-
-        if (widthValue == null || heightValue == null || xValue == null || yValue == null) {
-            return Optional.empty();
-        }
-
-        double width = PREFS.getDouble(WINDOW_WIDTH_KEY, -1);
-        double height = PREFS.getDouble(WINDOW_HEIGHT_KEY, -1);
+        double width = PREFS.getDouble(WINDOW_WIDTH_KEY, Double.NaN);
+        double height = PREFS.getDouble(WINDOW_HEIGHT_KEY, Double.NaN);
         double x = PREFS.getDouble(WINDOW_X_KEY, Double.NaN);
         double y = PREFS.getDouble(WINDOW_Y_KEY, Double.NaN);
 

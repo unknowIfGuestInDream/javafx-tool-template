@@ -69,7 +69,6 @@ public class TemplateApplication extends Application {
 
     @Override
     public void stop() {
-        persistWindowBounds(primaryStage);
         if (controller != null) {
             controller.shutdown();
         }
