@@ -43,5 +43,5 @@ if ($LASTEXITCODE -ne 0) {
   throw 'jlink failed to create custom runtime'
 }
 
-Remove-Item -Path "jdk-$jreVersion-jre" -Recurse -Force
+Remove-Item -Path "jdk-$jreVersion" -Recurse -Force
 Remove-Item -Path 'jdk.zip' -Force
