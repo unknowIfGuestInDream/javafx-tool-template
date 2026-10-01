@@ -30,7 +30,7 @@
 # see https://api.adoptium.net/q/swagger-ui/#/Binary/getBinaryByVersion
 jreVersion='25.0.4+7'
 
-macApi='https://api.adoptium.net/v3/binary/version/jdk-${jreVersion//+/%2B}/mac/aarch64/jdk/hotspot/normal/eclipse?project=jdk'
+macApi="https://api.adoptium.net/v3/binary/version/jdk-${jreVersion//+/%2B}/mac/aarch64/jdk/hotspot/normal/eclipse?project=jdk"
 curl -L -o jdk.tar.gz "${macApi}"
 tar -xzf jdk.tar.gz
 
