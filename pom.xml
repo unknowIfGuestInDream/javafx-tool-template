@@ -33,10 +33,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
-        <javafx.version>21.0.12</javafx.version>
+        <javafx.version>25.0.4</javafx.version>
         <controlsfx.version>11.2.5</controlsfx.version>
         <preferencesfx.version>11.19.0</preferencesfx.version>
         <atlantafx.version>3.0.0</atlantafx.version>

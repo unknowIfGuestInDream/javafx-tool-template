@@ -4,7 +4,7 @@
 
 ## Requirements
 
-- Java 21 or later
+- Java 25 or later
 - Maven 3.9+
 
 ## Getting Started
