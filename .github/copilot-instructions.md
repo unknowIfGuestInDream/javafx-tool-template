@@ -2,9 +2,9 @@
 
 ## Repository Overview
 
-**JavaFX Tool Template** is a Maven-based JavaFX 21 desktop application template. It provides out-of-the-box support for internationalization (i18n), theme management (AtlantaFX), and user preferences (PreferencesFX). The project is small (~20 source files) and targets Java 21 on Ubuntu, Windows, and macOS.
+**JavaFX Tool Template** is a Maven-based JavaFX 25 desktop application template. It provides out-of-the-box support for internationalization (i18n), theme management (AtlantaFX), and user preferences (PreferencesFX). The project is small (~20 source files) and targets Java 25 on Ubuntu, Windows, and macOS.
 
-- **Language:** Java 21
+- **Language:** Java 25
 - **Build tool:** Maven 3.9+
 
 ## Commit Message Convention
@@ -25,11 +25,11 @@ Examples:
 - `feat(i18n): add French locale support`
 - `fix(theme): correct dark mode contrast ratio`
 - `docs: update README with new build steps`
-- `chore(deps): upgrade javafx to 21.0.11`
+- `chore(deps): upgrade javafx to 25.0.4`
 
 ## Build & Validation
 
-Always use Java 21 (Temurin recommended). Set `JAVA_HOME` if needed.
+Always use Java 25 (Temurin recommended). Set `JAVA_HOME` if needed.
 
 ```bash
 # Build and run all tests (required before any PR)
@@ -62,7 +62,7 @@ mvn test
     release.yml    # On release created: packages per-OS ZIP and uploads to GitHub release
 
 scripts/
-  jre.sh           # Linux: downloads JDK 21, builds custom JRE via jlink
+  jre.sh           # Linux: downloads JDK 25, builds custom JRE via jlink
   jre_mac.sh       # macOS: same as jre.sh for macOS
   jre.ps1          # Windows: same as jre.sh for Windows (PowerShell)
   linux/start.sh   # Linux launcher script (bundled in staging)
@@ -104,7 +104,7 @@ src/test/java/com/tlcsdm/fxtemplate/
 The **Test** workflow (`.github/workflows/test.yml`) runs on every push and pull request to `main`/`master`:
 
 1. Checks out the code
-2. Sets up Temurin JDK 21
+2. Sets up Temurin JDK 25
 3. Caches `~/.m2/repository`
 4. Runs `mvn -B clean verify --no-transfer-progress`
 

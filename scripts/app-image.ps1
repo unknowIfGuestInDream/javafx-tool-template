@@ -28,7 +28,7 @@
 $ErrorActionPreference = 'Stop'
 
 if (-not (Get-Command jpackage -ErrorAction SilentlyContinue)) {
-  throw 'jpackage not found on PATH. Ensure JDK 21 is installed and JAVA_HOME/bin is on PATH.'
+  throw 'jpackage not found on PATH. Ensure JDK 25 is installed and JAVA_HOME/bin is on PATH.'
 }
 
 $version = $env:APP_VERSION
